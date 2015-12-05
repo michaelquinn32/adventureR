@@ -2,14 +2,14 @@
 % Please edit documentation in R/score_model.R
 \name{score_model}
 \alias{score_model}
-\alias{score_model.lda}
+\alias{score_model.LDA}
 \alias{score_model.nb}
 \alias{score_model.train}
 \title{Score a model with Precision, Recall and F1}
 \usage{
 score_model(.object, newdata = NULL, actual = NULL, ...)
 
-\method{score_model}{lda}(.object, newdata = NULL, actual = NULL)
+\method{score_model}{LDA}(.object, newdata = NULL, actual = NULL)
 
 \method{score_model}{nb}(.object, newdata = NULL, actual = NULL)
 
@@ -32,7 +32,7 @@ Score a model with Precision, Recall and F1
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{lda}: Generate scores for lda models
+\item \code{LDA}: Generate scores for lda models
 
 \item \code{nb}: Generate scores for naive bayes models
 
