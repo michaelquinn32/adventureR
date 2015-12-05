@@ -1,0 +1,12 @@
+Package: adventureR
+Type: Package
+Title: Functions for the Big Blog of R Adventures.
+Version: 0.1.0
+Authors@R: c(person("Michael", "Quinn", , "msquinn2@illinois.edu", c("aut", "cre")))
+Description: This package accompanies posts on the Big Blog of R Adventures. 
+License: GPL3
+Imports:
+    purrr (>= 0.1.0)
+URL: https://github.com/michaelquinn32/adventureR
+LazyData: TRUE
+RoxygenNote: 5.0.1

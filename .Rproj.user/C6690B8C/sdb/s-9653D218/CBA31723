@@ -1,0 +1,19 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Score a model with Precision, Recall and F1\n#'\n#' @param .object a model object\n#' @param newdata an optional new data frame for generating predictions; otherwise score fit on training data\n#' @param actual an optional vector for the true values; used for assessing predictions on test data\n#' @param ... other parameters passed for scoring\n#'\n#' @return A list with the Precision, Recall and F1\n#' @export\n\nscore_model <- function(.object, newdata = NULL, actual = NULL, ...) {\n    UseMethod(\"score_model\")\n}\n\n#' @describeIn score_model\n#' Generate scores for lda models\n#'\n#' @export\n\nscore_model.lda <- function(.object, newdata = NULL, actual = NULL) {\n    # Get fitted values\n    fit <- predict(.object, newdata)$fit\n\n    # Get actuals\n    if (is.null(actual)) actual <- .object$actual\n\n    # Find precision and recall\n    prec <- precision(fit, actual)\n    rec <- recall(fit, actual)\n\n    # Return results\n    list(precision = prec, recall = rec, f1 = f1_score(prec, rec))\n}\n\n#' @describeIn score_model\n#' Generate scores for naive bayes models\n#'\n#' @export\n\nscore_model.nb <- function(.object, newdata = NULL, actual = NULL) {\n    # Get fitted values\n    fit <- predict(.object, newdata)$fit\n\n    # Get actuals\n    if (is.null(actual)) actual <- .object$actual\n\n    # Find precision and recall\n    prec <- precision(fit, actual)\n    rec <- recall(fit, actual)\n\n    # Return results\n    list(precision = prec, recall = rec, f1 = f1_score(prec, rec))\n}\n\n#' @describeIn score_model\n#' Generate scores for models fit in \\code{caret}\n#'\n#' @export\n\nscore_model.train <- function(.object, newdata = NULL, actual = NULL) {\n    # Get fitted values\n    fit <- predict(.object, newdata) %>% as.character %>% as.numeric\n\n    # Get actuals\n    if (is.null(actual)) {\n        actual <- .object$trainingData$.outcome %>% as.character %>% as.numeric\n    }\n\n    # Find precision and recall\n    prec <- precision(fit, actual)\n    rec <- recall(fit, actual)\n\n    # Return results\n    list(precision = prec, recall = rec, f1 = f1_score(prec, rec))\n}",
+    "created" : 1449336314855.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1850348174",
+    "id" : "CBA31723",
+    "lastKnownWriteTime" : 1449336439,
+    "path" : "~/Projects/adventureR/R/score_model.R",
+    "project_path" : "R/score_model.R",
+    "properties" : {
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
