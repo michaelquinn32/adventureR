@@ -17,12 +17,15 @@ score_model <- function(.object, newdata = NULL, actual = NULL, ...) {
 #'
 #' @export
 
-score_model.lda <- function(.object, newdata = NULL, actual = NULL) {
+score_model.LDA <- function(.object, newdata = NULL, actual = NULL) {
     # Get fitted values
     fit <- predict(.object, newdata)$fit
 
     # Get actuals
     if (is.null(actual)) actual <- .object$actual
+
+    # Correct type of actuals
+    if (is.factor(actual)) actual <- to_number(actual)
 
     # Find precision and recall
     prec <- precision(fit, actual)
@@ -44,6 +47,9 @@ score_model.nb <- function(.object, newdata = NULL, actual = NULL) {
     # Get actuals
     if (is.null(actual)) actual <- .object$actual
 
+    # Correct type of actuals
+    if (is.factor(actual)) actual <- to_number(actual)
+
     # Find precision and recall
     prec <- precision(fit, actual)
     rec <- recall(fit, actual)
@@ -62,9 +68,10 @@ score_model.train <- function(.object, newdata = NULL, actual = NULL) {
     fit <- predict(.object, newdata) %>% as.character %>% as.numeric
 
     # Get actuals
-    if (is.null(actual)) {
-        actual <- .object$trainingData$.outcome %>% as.character %>% as.numeric
-    }
+    if (is.null(actual)) actual <- .object$trainingData$.outcome
+
+    # Correct type of actuals
+    if (is.factor(actual)) actual <- to_number(actual)
 
     # Find precision and recall
     prec <- precision(fit, actual)

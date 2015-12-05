@@ -6,9 +6,14 @@
 #' @return A list containing the predicted values and classes
 #' @export
 
-predict.lda <- function(object, newdata = NULL) {
+predict.LDA <- function(object, newdata = NULL) {
     # Set up the data
-    if (is.null(newdata)) newdata <- object$x
+    if (is.null(newdata)) {
+        newdata <- object$x
+
+    } else {
+        newdata <- newdata[names(object$x)]
+    }
 
     # Get model parameters
     a <- object$a
@@ -29,7 +34,12 @@ predict.lda <- function(object, newdata = NULL) {
 
 predict.nb <- function(object, newdata) {
     # Set up the data
-    if (is.null(newdata)) newdata <- object$x
+    if (is.null(newdata)) {
+        newdata <- object$x
+
+    } else {
+        newdata <- newdata[names(object$x)]
+    }
 
     # Get model parameters
     mus <- object$mus

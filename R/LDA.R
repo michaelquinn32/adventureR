@@ -33,7 +33,7 @@ LDA <- function(formula, data) {
     y <- mf[[1]]
 
     # Checking and fixing the type of y
-    if (is.factor(y)) y <- y %>% as.character %>% as.numeric
+    if (is.factor(y)) y <- to_number(y)
 
     # Assertions
     stopifnot(length(unique(y)) == 2)
@@ -64,7 +64,7 @@ LDA <- function(formula, data) {
 
     # Return
     results <- list(actual = y, x = x, fit = as.numeric(preds > 0), preds = preds, a = a, b = b)
-    structure(results, class = "lda")
+    structure(results, class = "LDA")
 }
 
 #' @describeIn LDA

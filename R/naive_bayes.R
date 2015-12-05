@@ -34,7 +34,7 @@ naive_bayes <- function(formula, data) {
     y <- mf[[1]]
 
     # Checking and fixing the type of y
-    if (is.factor(y)) y <- y %>% as.character %>% as.numeric
+    if (is.factor(y)) y <- to_number(y)
 
     # Assertions
     stopifnot(length(unique(y)) == 2)
