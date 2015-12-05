@@ -27,7 +27,7 @@
 #'
 #' @export
 
-naive_bayes <- function(formula, data) {
+naive_bayes <- function(formula, data, nzv_thresh = 1e-6) {
     # Set up the model frame from the formula
     mf <- model.frame(formula, data)
     x <- mf[-1]
@@ -45,8 +45,19 @@ naive_bayes <- function(formula, data) {
     ps <- map(ns, ~ .x / n)
     p_rat <- reduce_right(ps, `/`)
 
-    # Group means and variances
+    # Check for zero variance groups
     groups <- split(x, y)
+    check <- at_depth(groups, 1, map_lgl, zero_variance, .thresh = nzv_thresh)
+    
+    # Drop zero variance columns
+    if(any(unlist(check))) {
+        warning("Column dropped for zero variance class")
+        id <- !reduce(check, `+`)
+        x <- x[id]
+        groups <- split(x, y)
+    }
+    
+    # Group means and variances
     mus <- at_depth(groups, 1, map_dbl, mean)
     sigmas <- at_depth(groups, 1, map_dbl, var)
 
