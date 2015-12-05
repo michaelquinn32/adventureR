@@ -32,6 +32,9 @@ LDA <- function(formula, data) {
     x <- mf[-1]
     y <- mf[[1]]
 
+    # Checking and fixing the type of y
+    if (is.factor(y)) y <- y %>% as.character %>% as.numeric
+
     # Assertions
     stopifnot(length(unique(y)) == 2)
 

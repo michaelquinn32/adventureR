@@ -33,6 +33,9 @@ naive_bayes <- function(formula, data) {
     x <- mf[-1]
     y <- mf[[1]]
 
+    # Checking and fixing the type of y
+    if (is.factor(y)) y <- y %>% as.character %>% as.numeric
+
     # Assertions
     stopifnot(length(unique(y)) == 2)
 
@@ -76,6 +79,6 @@ naive_bayes <- function(formula, data) {
 log_odds <- function(x, mus, sigmas) {
     var_rat <- reduce(sigmas, `/`)
     class_dist <- map2(mus, sigmas, ~ (x - .x)^2 / .y)
-    class_mat <- map_call(class_dist, cbind)
+    class_mat <- do.call(cbind, class_dist)
     sum(.5 * log(var_rat) + class_mat %*% c(.5, -.5))
 }
