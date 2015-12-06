@@ -47,16 +47,16 @@ naive_bayes <- function(formula, data, nzv_thresh = 1e-6) {
 
     # Check for zero variance groups
     groups <- split(x, y)
-    check <- at_depth(groups, 1, map_lgl, zero_variance, .thresh = nzv_thresh)
-    
+    check <- at_depth(groups, 1, map_lgl, Negate(zero_variance), .thresh = nzv_thresh)
+
     # Drop zero variance columns
-    if(any(unlist(check))) {
+    if(!all(unlist(check))) {
         warning("Column dropped for zero variance class")
-        id <- !reduce(check, `+`)
+        id <- reduce(check, `&`)
         x <- x[id]
         groups <- split(x, y)
     }
-    
+
     # Group means and variances
     mus <- at_depth(groups, 1, map_dbl, mean)
     sigmas <- at_depth(groups, 1, map_dbl, var)

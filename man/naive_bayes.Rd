@@ -5,7 +5,7 @@
 \alias{naive_bayes}
 \title{Fit a Naive Bayes Classifier}
 \usage{
-naive_bayes(formula, data)
+naive_bayes(formula, data, nzv_thresh = 1e-06)
 
 log_odds(x, mus, sigmas)
 }

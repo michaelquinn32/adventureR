@@ -8,7 +8,7 @@
 #' @export
 
 precision <- function(fit, actual) {
-    sum((fit == 1) & (fit == actual)) / sum(actual)
+    sum((fit == 1) & (fit == actual)) / sum(fit)
 }
 
 #' Calculate the recall of a predictor
@@ -21,7 +21,7 @@ precision <- function(fit, actual) {
 #' @export
 
 recall <- function(fit, actual) {
-    sum((fit == 1) & (fit == actual)) / sum(fit)
+    sum((fit == 1) & (fit == actual)) / sum(actual)
 }
 
 #' Calculate the F1 score of a predictor
