@@ -59,7 +59,8 @@ geyser_simulation <- function(rates, n, timeframe = NULL) {
 
     # Create an index
     index <- seq_len(n)
-
+    
+    # Output results
     results <- list(counts = data.frame(n = index, do.call(rbind, counts)),
                     frequencies = data.frame(n = index, do.call(rbind, freq)),
                     first_eruption = data.frame(n = index, do.call(rbind, first)),
