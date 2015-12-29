@@ -25,31 +25,56 @@
 #'  }
 #'
 #' @examples
-#' rates <- list(a = 2, b = 4, c = 6)
-#' geyser_simulation(rates, 10)
+#' my_geysers <- geyser(a = 2, b = 4, c = 6)
+#' simulate(my_geysers, 10)
 #'
 #' @export
 
-geyser_simulation <- function(rates, n, timeframe = NULL) {
+geyser <- function(...) {
+    ls <- list(...)
+
+    # Allow for list or ... input
+    if (is.recursive(ls[[1]])) rates <- unlist(ls, recursive = FALSE)
+    else rates <- ls
+
+    # Assertions
+    ## No nested lists
+    if (is.recursive(rates[[1]])) stop("Cannot handle nested lists")
+
+    ## More than two geysers
+    if (length(rates) < 2) stop("The number of geysers should be >= 2")
+
+    ## Correct names
+    if (is.null(names(rates))) stop("The list of eruption names must be named")
+    if (anyDuplicated(names(rates)) > 0) stop("The names of the geysers must be unique")
+
+    structure(rates, class = "geyser")
+}
+
+#' @rdname geyser
+#' @export
+
+simulate.geyser <- function(object, n, timeframe = NULL, seed = NULL) {
     # Basic assertions about n
     stopifnot(length(n) == 1)
 
-    # Basic assertions about the list of rates
-    nms <- set_names(names(rates), names(rates))
-    if (is.null(nms)) stop("The list of eruption names must be named")
-    if (anyDuplicated(nms) > 0) stop("The names of the geysers must be unique")
-
     # Set the timeframe
-    if (is.null(timeframe)) timeframe <- max(flatten_dbl(rates))
+    if (is.null(timeframe)) timeframe <- max(flatten_dbl(object))
+
+    # Set the seed
+    if (is.null(seed)) set.seed(seed)
 
     # Generate the simulated geyser eruption times
-    simulations <- rerun(n, geysers(rates, timeframe))
+    simulations <- rerun(n, geysers(object, timeframe))
 
     # Find time until the first eruption of each geyser
     first <-  map2(simulations, runif(n, 0, timeframe), first_eruption)
 
     # Get the name of the first geyser to erupt
     first_geyser <- map(first, ~ compose(names, which.min)(.x))
+
+    # Set the names
+    nms <- set_names(names(object), names(object))
 
     # Count the number of eruptions for each geyser over n simulation
     counts <- count_seq(first_geyser, nms)
@@ -59,19 +84,19 @@ geyser_simulation <- function(rates, n, timeframe = NULL) {
 
     # Create an index
     index <- seq_len(n)
-    
+
     # Output results
     results <- list(counts = data.frame(n = index, do.call(rbind, counts)),
                     frequencies = data.frame(n = index, do.call(rbind, freq)),
                     first_eruption = data.frame(n = index, do.call(rbind, first)),
                     n = n,
-                    rates = rates)
+                    rates = unclass(object))
 
-    structure(results, class = "geyser")
+    structure(results, class = "simulate.geyser")
 }
 
 
-#' @describeIn geyser_simulation Simulate the eruption of a single geyser
+#' @describeIn geyser Simulate the eruption of a single geyser
 #' @export
 
 eruptions <- function(rate, timeframe) {
@@ -84,7 +109,7 @@ eruptions <- function(rate, timeframe) {
 }
 
 
-#' @describeIn geyser_simulation Simulate multiple geysers, given rates
+#' @describeIn geyser Simulate multiple geysers, given rates
 #' @export
 
 geysers <- function(rates, timeframe) {
@@ -93,7 +118,7 @@ geysers <- function(rates, timeframe) {
 }
 
 
-#' @describeIn geyser_simulation Find the time to each geyser's first eruption
+#' @describeIn geyser Find the time to each geyser's first eruption
 #' @export
 
 first_eruption <- function(geysers, arrival) {
@@ -102,7 +127,7 @@ first_eruption <- function(geysers, arrival) {
 }
 
 
-#' @describeIn geyser_simulation Count the number of times a level appears in a vector
+#' @describeIn geyser Count the number of times a level appears in a vector
 #' @export
 
 count_v <- function(level, vector) {
@@ -110,7 +135,7 @@ count_v <- function(level, vector) {
 }
 
 
-#' @describeIn geyser_simulation Given a vector and a set of levels, count how often
+#' @describeIn geyser Given a vector and a set of levels, count how often
 #'      each level appears
 #' @export
 
@@ -121,10 +146,10 @@ count_seq <- function(vector, levels) {
 }
 
 
-#' @rdname geyser_simulation
+#' @rdname geyser
 #' @export
 
-summary.geyser <- function(object, nwindows = 11) {
+summary.simulate.geyser <- function(object, nwindows = 11) {
     # Get indexing value for windows, showing simulation evolution
     id <- seq(0, object$n, length.out = nwindows)
 
@@ -153,7 +178,7 @@ summary.geyser <- function(object, nwindows = 11) {
 }
 
 
-#' @rdname geyser_simulation
+#' @rdname geyser
 #' @export
 
 print.summary.geyser <- function(object) {
@@ -186,7 +211,7 @@ print.summary.geyser <- function(object) {
 }
 
 
-#' @rdname geyser_simulation
+#' @rdname geyser
 #'
 #' @usage
 #' ## S3 method for class 'geyser'
@@ -194,7 +219,7 @@ print.summary.geyser <- function(object) {
 #'
 #' @export
 
-autoplot.geyser <- function(object, title = "Geyser simulation results, with approximate 95% CI") {
+autoplot.simulate.geyser <- function(object, title = "Geyser simulation results, with approximate 95% CI") {
     # Generate bounds of confidence intervals
     n <- seq_len(object$n)
     se <- map(object$frequencies[-1], ~ sqrt(.x * (1 - .x)/ n))
