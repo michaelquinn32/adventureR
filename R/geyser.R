@@ -62,7 +62,7 @@ simulate.geyser <- function(object, n, timeframe = NULL, seed = NULL) {
     if (is.null(timeframe)) timeframe <- max(flatten_dbl(object))
 
     # Set the seed
-    if (is.null(seed)) set.seed(seed)
+    if (!is.null(seed)) set.seed(seed)
 
     # Generate the simulated geyser eruption times
     simulations <- rerun(n, geysers(object, timeframe))
