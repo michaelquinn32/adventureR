@@ -10,7 +10,9 @@ Depends:
 Imports:
     purrr (>= 0.1.0),
     ggplot2 (>= 2.0.0),
-    tidyr (>= 0.3.1)
+    tidyr (>= 0.3.1),
+    dplyr (>= 0.4.3),
+    parallel (>= 3.2.2)
 URL: https://github.com/michaelquinn32/adventureR
 LazyData: TRUE
 RoxygenNote: 5.0.1

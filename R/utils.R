@@ -13,3 +13,13 @@ sample_ci <- function(estimate, se, conf.level = .95) {
 is.positive <- function(x) {
     x > 0
 }
+
+# Another confidence interval function
+se_ci <- function(x, probs = c(.025, .975), ...) {
+    qnorm(probs, mean(x), sd(x))
+}
+
+# A curried version of quantile to catch unnecessary arguments
+qntl <- function(x, probs = c(.025, .975), ...) {
+    quantile(x, probs)
+}

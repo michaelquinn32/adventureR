@@ -13,5 +13,7 @@
 #'
 #' @import purrr ggplot2
 #' @importFrom tidyr gather separate spread
+#' @importFrom dplyr mutate
+#' @importFrom parallel mclapply
 
 "_PACKAGE"
