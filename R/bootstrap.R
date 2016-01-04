@@ -159,11 +159,15 @@ emp_dist <- function(t, q, ss_stat, samp_stat, b) {
 }
 
 #' @describeIn  bootstrap_experiment Another confidence interval function
+#' @export
+
 se_ci <- function(x, probs = c(.025, .975), ...) {
     qnorm(probs, mean(x), sd(x))
 }
 
 #' @describeIn bootstrap_experiment A curried version of quantile to catch unnecessary arguments
+#' @export
+
 qntl <- function(x, probs = c(.025, .975), ...) {
     quantile(x, probs)
 }
