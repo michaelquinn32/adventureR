@@ -4,8 +4,10 @@
 \alias{bootstrap_experiment}
 \alias{bs_sim}
 \alias{compare_methods}
+\alias{qntl}
 \alias{quantile_ev}
 \alias{red_se}
+\alias{se_ci}
 \alias{ss_quantiles}
 \title{Experimenting with sampling and calculating confidence intervals in bootstrapping}
 \usage{
@@ -22,6 +24,10 @@ red_se(x, probs = c(0.025, 0.975), n, b, mu)
 ss_quantiles(x, probs = c(0.025, 0.975), n, b, mu)
 
 quantile_ev(x, probs = c(0.025, 0.975), n, b, mu, int = c(-500, 500))
+
+se_ci(x, probs = c(0.025, 0.975), ...)
+
+qntl(x, probs = c(0.025, 0.975), ...)
 }
 \arguments{
 \item{funs}{a list of functions for calculating confidence intervals}
@@ -82,6 +88,10 @@ on a generic bootstrap simulator.
 \item \code{ss_quantiles}: Subsamping quantiles (using differences)
 
 \item \code{quantile_ev}: Subsamping quantiles (with empirical distribution function)
+
+\item \code{se_ci}: Another confidence interval function
+
+\item \code{qntl}: A curried version of quantile to catch unnecessary arguments
 }}
 \examples{
 \dontrun{
