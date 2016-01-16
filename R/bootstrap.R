@@ -76,7 +76,7 @@ bootstrap_experiment <- function(funs,
     tests <- mclapply(combinations, compare_methods, funs, mc.cores = 4)
     out <- bind_rows(tests, .id = "test")
     mutate(out, bias.lwr = (lwr - true.lwr), bias.upr = upr - true.upr,
-           bias.sqr = bias.lwr^2 + bias.upr^2)
+           bias.sqr = sqrt(bias.lwr^2 + bias.upr^2))
 }
 
 #' @describeIn bootstrap_experiment One iteration of bootstrap experiment
