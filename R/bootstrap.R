@@ -73,7 +73,7 @@ bootstrap_experiment <- function(funs,
     combinations <- cross_n(ranges)
 
     # Execute all tests in parallel
-    tests <- map(combinations, compare_methods, funs)
+    tests <- mclapply(combinations, compare_methods, funs, mc.cores = 4)
     out <- bind_rows(tests, .id = "test")
     mutate(out, bias.lwr = (lwr - true.lwr), bias.upr = upr - true.upr,
            bias.sqr = bias.lwr^2 + bias.upr^2)
