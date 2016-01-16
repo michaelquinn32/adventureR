@@ -19,11 +19,11 @@ compare_methods(param, funs)
 
 bs_sim(x, bsi, replace, funs, n, b, ..., probs = c(0.025, 0.975))
 
-red_se(x, probs = c(0.025, 0.975), n, b, mu)
+red_se(x, probs = c(0.025, 0.975), n, b, xbar)
 
-ss_quantiles(x, probs = c(0.025, 0.975), n, b, mu)
+ss_quantiles(x, probs = c(0.025, 0.975), n, b, xbar)
 
-quantile_ev(x, probs = c(0.025, 0.975), n, b, mu, int = c(-500, 500))
+quantile_ev(x, probs = c(0.025, 0.975), n, b, xbar, int = c(-500, 500))
 
 se_ci(x, probs = c(0.025, 0.975), ...)
 
@@ -104,6 +104,5 @@ on a generic bootstrap simulator.
  test <- bootstrap_experiment(funs, length.out = 2, niter = 2)
 }
 
- @export
 }
 

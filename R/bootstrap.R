@@ -49,7 +49,7 @@
 #'  test <- bootstrap_experiment(funs, length.out = 2, niter = 2)
 #' }
 #'
-#'  @export
+#' @export
 
 bootstrap_experiment <- function(funs,
                                  nrange = c(1000, 10000),
@@ -91,13 +91,13 @@ compare_methods <- function(param, funs) {
     # Simulated vector
     x <- rnorm(n, param$mu, param$sigma)
 
-    # Get the true standard error and quantile
-    mu <- mean(x)
+    # Get the sample standard error and quantile
+    xbar <- mean(x)
     se <- sd(x) / sqrt(n)
-    true <- map(c(lwr = .025, upr = .975), qnorm, mu, se)
+    true <- map(c(lwr = .025, upr = .975), qnorm, xbar, se)
 
     # Simulation
-    sim <- bs_sim(x, param$bsi, replace = param$replace, funs, n = n, b = b, mu = mu)
+    sim <- bs_sim(x, param$bsi, replace = param$replace, funs, n = n, b = b, xbar = xbar)
 
     # Output
     param_cbm <- c(param, true = true)
@@ -127,25 +127,25 @@ bs_sim <- function(x, bsi, replace, funs, n, b, ..., probs = c(0.025, 0.975)) {
 #' @describeIn bootstrap_experiment Adjusting standard errors for smaller samples
 #' @export
 
-red_se <- function(x, probs = c(.025, .975), n, b, mu) {
+red_se <- function(x, probs = c(.025, .975), n, b, xbar) {
     se <- sd(x) * sqrt(b / n)
-    qnorm(probs, mu, se)
+    qnorm(probs, xbar, se)
 }
 
 #' @describeIn bootstrap_experiment Subsamping quantiles (using differences)
 #' @export
 
-ss_quantiles <- function(x, probs = c(.025, .975), n, b, mu) {
-    z.star <- sqrt(b) * (x - mu)
+ss_quantiles <- function(x, probs = c(.025, .975), n, b, xbar) {
+    z.star <- sqrt(b) * (x - xbar)
     qntls <- quantile(z.star, probs[2:1])
-    mu - qntls / sqrt(n)
+    xbar - qntls / sqrt(n)
 }
 
 #' @describeIn bootstrap_experiment Subsamping quantiles (with empirical distribution function)
 #' @export
 
-quantile_ev <- function(x, probs = c(.025, .975), n, b, mu, int = c(-500, 500)) {
-    vapply(probs, qntl_solve, numeric(1), x, mu, b, n, int)
+quantile_ev <- function(x, probs = c(.025, .975), n, b, xbar, int = c(-500, 500)) {
+    vapply(probs, qntl_solve, numeric(1), x, xbar, b, n, int)
 }
 
 qntl_solve <- function(q, ss_stat, samp_stat, b, n, int) {
